@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tide Level Graph</title>
+  <meta charset="utf-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #C0E0FF;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    form {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    select,
+    input[type="date"],
+    input[type="submit"] {
+      padding: 5px 10px;
+      font-size: 16px;
+      border-radius: 4px;
+    }
+
+    input[type="submit"] {
+      background-color: #333;
+      color: #FFF;
+      border: none;
+      cursor: pointer;
+    }
+
+    img {
+      max-width: 100%;
+      margin-top: 20px;
+      display: block;
+    }
+
+    p {
+      color: red;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .graph-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: #FFFFFF;
+      padding: 20px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .graph-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    small {
+      font-size: 20px;
+    }
+
+    .sea {
+      color: #196FAD;
+    }
+  </style>
+</head>
+<body>
+  <div class="graph-container">
+    <h1><span class="sea">ET & MT</span>와 함께하는 건강한 <span class="sea">바다</span> 지구여행 <small>by S.P.T</small></h1> 
+    {% if name %}
+    <h2>{{ date }} {{ name }} 조위 그래프</h2>
+    {% else %}
+    <h2>조위 그래프</h2>
+    {% endif %}
+    <form method="POST" action="/">
+      <label for="location">지역:</label>
+      <select id="location" name="location">
+        {% for location in locations %}
+          {% if location == default_location %}
+            <option value="{{ location }}" selected>{{ location }}</option>
+          {% else %}
+            <option value="{{ location }}">{{ location }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <label for="date">날짜:</label>
+      {% if default_date %}
+      <input type="date" id="date" name="date" value="{{ default_date }}">
+      {% else %}
+      <input type="date" id="date" name="date">
+      {% endif %}
+      <input type="submit" value="Submit">
+    </form>
+    <div class="graph">
+      {% if name %}
+      <!-- <div class="graph-title">{{ name }} 조위 그래프</div> -->
+      <img src="{{ url_for('static', filename=name + '_' + formatted_date + '_plot.png') }}" alt="조위 그래프">
+      {% endif %}
+    </div>
+
+    {% if error_message %}
+    <p>{{ error_message }}</p>
+    {% endif %}
+    
+  </div>
+</body>
+</html>
